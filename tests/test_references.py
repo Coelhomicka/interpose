@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from secret_runtime.core.references import SecretReference, SecretReferenceError
+from interpose.core.references import SecretReference, SecretReferenceError
 
 
 def test_secret_reference_parse():

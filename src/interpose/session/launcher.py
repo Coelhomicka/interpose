@@ -74,18 +74,18 @@ def build_session_environment(
 
     environment.update(profile.public_environment)
     environment.update(profile.environment)
-    environment["SECRET_RUNTIME_AGENT"] = agent
-    environment["SECRET_RUNTIME_SESSION"] = session
-    environment["SECRET_RUNTIME_MODE"] = "reference-only"
-    environment.pop("SECRET_RUNTIME_MASTER_KEY", None)
-    environment.pop("SECRET_RUNTIME_HOME", None)
+    environment["INTERPOSE_AGENT"] = agent
+    environment["INTERPOSE_SESSION"] = session
+    environment["INTERPOSE_MODE"] = "reference-only"
+    environment.pop("INTERPOSE_MASTER_KEY", None)
+    environment.pop("INTERPOSE_HOME", None)
 
     if profile.runtime.http_proxy:
         environment["HTTP_PROXY"] = profile.runtime.http_proxy
         environment["http_proxy"] = profile.runtime.http_proxy
         environment["NO_PROXY"] = ""
         environment["no_proxy"] = ""
-        environment["SECRET_RUNTIME_HTTP_PROXY"] = profile.runtime.http_proxy
+        environment["INTERPOSE_HTTP_PROXY"] = profile.runtime.http_proxy
         environment.pop("HTTPS_PROXY", None)
         environment.pop("https_proxy", None)
 

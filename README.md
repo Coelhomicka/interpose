@@ -1,14 +1,14 @@
-# Secret Runtime
+# Interpose
 
-**Credential virtualization for untrusted AI agents and generated code.**
+**Credential interposition for untrusted AI agents.**
 
-[![CI](https://github.com/MickaelCoelho/secret-runtime/actions/workflows/ci.yml/badge.svg)](https://github.com/MickaelCoelho/secret-runtime/actions/workflows/ci.yml)
+[![CI](https://github.com/MickaelCoelho/interpose/actions/workflows/ci.yml/badge.svg)](https://github.com/MickaelCoelho/interpose/actions/workflows/ci.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-blue.svg)](https://www.python.org/downloads/)
 [![Status: alpha](https://img.shields.io/badge/status-alpha-orange.svg)](#project-status)
 
 Coding agents write `.env` files, run shell commands, and paste config into prompts. Every one of
-those is a place a real API key can end up. Secret Runtime removes the key from the agent's reach
+those is a place a real API key can end up. Interpose removes the key from the agent's reach
 entirely: the agent gets an opaque reference, and a trusted local broker performs the authenticated
 request on its behalf.
 
@@ -20,6 +20,10 @@ OPENAI_BASE_URL=http://127.0.0.1:9876/proxy/api.openai.com/v1
 
 The agent's HTTP client works unmodified. The plaintext key never enters the agent's process,
 environment, arguments, logs, or context window.
+
+The name is the mechanism. *Interposition* is the practice of inserting a trusted layer between a
+caller and the resource it is reaching for — so the call still works, and the caller never holds
+what makes it work.
 
 ---
 
@@ -55,7 +59,7 @@ source .venv/bin/activate       # Windows: .\.venv\Scripts\Activate.ps1
 python -m pip install -e ".[dev]"
 ```
 
-Runtime state lives in `~/.secret-runtime` (`%USERPROFILE%\.secret-runtime` on Windows). Keep the
+Runtime state lives in `~/.interpose` (`%USERPROFILE%\.interpose` on Windows). Keep the
 administrative shell, the database, and the master key outside the agent's workspace.
 
 ## Quickstart
@@ -63,8 +67,8 @@ administrative shell, the database, and the master key outside the agent's works
 **1. Store a secret** through a hidden prompt — the value is never echoed or passed as an argument:
 
 ```bash
-secretruntime secret add openai/prod
-secretruntime secret list
+interpose secret add openai/prod
+interpose secret list
 ```
 
 **2. Grant a capability.** Policies come from an operator-controlled file. A session profile can
@@ -84,8 +88,8 @@ methods:
 ```
 
 ```bash
-secretruntime policy add openai-policy.yaml
-secretruntime policy list
+interpose policy add openai-policy.yaml
+interpose policy list
 ```
 
 **3. Declare the session.** The profile binds conventional variable names to references:
@@ -104,25 +108,25 @@ public_environment:
 **4. Start the broker** in a trusted terminal:
 
 ```bash
-secretruntime proxy --host 127.0.0.1 --port 9876
+interpose proxy --host 127.0.0.1 --port 9876
 ```
 
 **5. Run the agent** with a sanitized environment:
 
 ```bash
-secretruntime run --profile session.yaml --agent claude-code -- claude
+interpose run --profile session.yaml --agent claude-code -- claude
 ```
 
 The child process receives `OPENAI_API_KEY=secret://openai/prod`. Credentials inherited from your
 own shell are stripped — the environment is rebuilt from an allowlist — and the launcher never
-passes `SECRET_RUNTIME_MASTER_KEY` or `SECRET_RUNTIME_HOME` to the child.
+passes `INTERPOSE_MASTER_KEY` or `INTERPOSE_HOME` to the child.
 
 The launcher is agent-agnostic:
 
 ```bash
-secretruntime run --profile session.yaml --agent codex      -- codex
-secretruntime run --profile session.yaml --agent cursor     -- cursor
-secretruntime run --profile session.yaml --agent gemini-cli -- gemini
+interpose run --profile session.yaml --agent codex      -- codex
+interpose run --profile session.yaml --agent cursor     -- cursor
+interpose run --profile session.yaml --agent gemini-cli -- gemini
 ```
 
 ## Verifying without resolving
@@ -130,9 +134,9 @@ secretruntime run --profile session.yaml --agent gemini-cli -- gemini
 Every validation path works on references alone. None of them decrypt anything:
 
 ```bash
-secretruntime profile validate session.yaml
-secretruntime profile env session.yaml
-secretruntime env validate .env --profile session.yaml    # check what the agent wrote
+interpose profile validate session.yaml
+interpose profile env session.yaml
+interpose env validate .env --profile session.yaml    # check what the agent wrote
 ```
 
 `env validate` guards against the most common failure mode: an agent that "helpfully" replaces a
@@ -199,10 +203,10 @@ be honest about what does not work, not to market what does.
 
 ## Limited executor
 
-`secure-exec` substitutes secrets directly into subprocess arguments:
+`interpose-exec` substitutes secrets directly into subprocess arguments:
 
 ```bash
-secure-exec --agent codex curl "https://api.github.com/user" \
+interpose-exec --agent codex curl "https://api.github.com/user" \
   -H "Authorization: Bearer secret://github/prod"
 ```
 
@@ -213,7 +217,7 @@ the broker, where the secret never enters the child process.
 ## Administrative API
 
 ```bash
-secretruntime api --host 127.0.0.1 --port 8000
+interpose api --host 127.0.0.1 --port 8000
 ```
 
 `GET /health` · `GET|POST /secrets` · `DELETE /secrets/{id}` · `GET|POST /policies` · `GET /audit`

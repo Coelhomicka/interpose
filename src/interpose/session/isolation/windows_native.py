@@ -203,8 +203,8 @@ class WindowsNativeAppContainer:
         sid = ctypes.c_void_p()
         result = self.userenv.CreateAppContainerProfile(
             name,
-            "Secret Runtime agent session",
-            "Network-isolated Secret Runtime session",
+            "Interpose agent session",
+            "Network-isolated Interpose session",
             None,
             0,
             ctypes.byref(sid),

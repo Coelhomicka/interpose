@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from secret_runtime.core.redaction import SecretRedactionEngine
+from interpose.core.redaction import SecretRedactionEngine
 
 
 def test_redaction_engine_replaces_secret_value():

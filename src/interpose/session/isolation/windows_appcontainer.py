@@ -164,14 +164,14 @@ class WindowsAppContainerBackend:
 
     def _profile_name(self, *, suffix: str = "session") -> str:
         digest = hashlib.sha256(f"{self.session}:{suffix}".encode()).hexdigest()[:20]
-        return f"SecretRuntime.Agent.{digest}"
+        return f"Interpose.Agent.{digest}"
 
     def _profile_helper(self, operation: str, profile_name: str) -> None:
         process = subprocess.Popen(
             [
                 sys.executable,
                 "-m",
-                "secret_runtime.session.isolation.windows_profile_helper",
+                "interpose.session.isolation.windows_profile_helper",
                 operation,
                 profile_name,
             ],
@@ -211,7 +211,7 @@ class WindowsAppContainerBackend:
             raise IsolationError(f"refusing to grant AppContainer access to drive root: {path}")
         runtime_home = self.runtime_home.resolve(strict=False)
         if path == runtime_home or runtime_home.is_relative_to(path) or path.is_relative_to(runtime_home):
-            raise IsolationError(f"refusing to expose Secret Runtime storage through isolation ACL: {path}")
+            raise IsolationError(f"refusing to expose Interpose storage through isolation ACL: {path}")
         return path
 
     def _grant_filesystem_access(self, sid: str, cwd: Path) -> list[Path]:
@@ -254,7 +254,7 @@ class WindowsAppContainerBackend:
         port = urlsplit(self.options.broker_url or "").port
         if port is None:
             raise IsolationError("broker_url port is required")
-        prefix = f"SecretRuntime-{hashlib.sha256(self.session.encode()).hexdigest()[:16]}"
+        prefix = f"Interpose-{hashlib.sha256(self.session.encode()).hexdigest()[:16]}"
         rules: list[tuple[str, str, str]] = []
         if port > 1:
             rules.extend(

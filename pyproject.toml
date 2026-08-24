@@ -4,9 +4,9 @@ requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "secret-runtime"
+name = "interpose"
 version = "0.1.0"
-description = "Credential virtualization runtime for untrusted AI agents and generated applications"
+description = "Credential interposition for untrusted AI agents: the agent holds a reference, a trusted broker holds the key"
 readme = "README.md"
 requires-python = ">=3.12"
 license = "Apache-2.0"
@@ -56,15 +56,15 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/MickaelCoelho/secret-runtime"
-Repository = "https://github.com/MickaelCoelho/secret-runtime"
-Issues = "https://github.com/MickaelCoelho/secret-runtime/issues"
-Changelog = "https://github.com/MickaelCoelho/secret-runtime/blob/main/CHANGELOG.md"
-"Threat Model" = "https://github.com/MickaelCoelho/secret-runtime/blob/main/docs/THREAT_MODEL.md"
+Homepage = "https://github.com/MickaelCoelho/interpose"
+Repository = "https://github.com/MickaelCoelho/interpose"
+Issues = "https://github.com/MickaelCoelho/interpose/issues"
+Changelog = "https://github.com/MickaelCoelho/interpose/blob/main/CHANGELOG.md"
+"Threat Model" = "https://github.com/MickaelCoelho/interpose/blob/main/docs/THREAT_MODEL.md"
 
 [project.scripts]
-secretruntime = "secret_runtime.cli.main:app"
-secure-exec = "secret_runtime.cli.main:secure_exec_app"
+interpose = "interpose.cli.main:app"
+interpose-exec = "interpose.cli.main:interpose_exec_app"
 
 [tool.setuptools]
 package-dir = { "" = "src" }
@@ -84,7 +84,7 @@ filterwarnings = [
 
 [tool.coverage.run]
 branch = true
-source = ["secret_runtime"]
+source = ["interpose"]
 
 [tool.coverage.report]
 show_missing = true
@@ -121,7 +121,7 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 # Windows API bindings mirror the SDK's naming and cannot be renamed
-"src/secret_runtime/session/isolation/windows_native.py" = ["N801", "N815"]
+"src/interpose/session/isolation/windows_native.py" = ["N801", "N815"]
 "tests/**" = ["S106", "S108"]
 # The example app is a deliberate stand-in for untrusted generated code
 "examples/**" = ["S310"]

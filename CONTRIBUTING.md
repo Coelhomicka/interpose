@@ -1,4 +1,4 @@
-# Contributing to Secret Runtime
+# Contributing to Interpose
 
 Thanks for considering a contribution. This project mediates real credentials, so the bar for
 changes to the trusted zone is deliberately high — but there is plenty of work that does not touch
@@ -17,8 +17,8 @@ saves a round trip.
 ## Development setup
 
 ```bash
-git clone https://github.com/MickaelCoelho/secret-runtime.git
-cd secret-runtime
+git clone https://github.com/MickaelCoelho/interpose.git
+cd interpose
 
 python -m venv .venv
 source .venv/bin/activate       # Windows: .\.venv\Scripts\Activate.ps1
@@ -36,7 +36,7 @@ Both must be clean before you open a pull request. CI runs them on Linux, macOS,
 against Python 3.12 and 3.13.
 
 Tests never touch your real runtime home: the `runtime_config` fixture points
-`SECRET_RUNTIME_HOME` at a temporary directory and supplies a throwaway master key. If you write a
+`INTERPOSE_HOME` at a temporary directory and supplies a throwaway master key. If you write a
 test that needs runtime state, use that fixture rather than constructing paths yourself.
 
 Windows AppContainer tests are skipped on other platforms and some need an elevated shell. A skip is
@@ -51,12 +51,12 @@ Ranked by how much each one unblocks:
    policy but does not contain an adversary. Needs: a daemon under its own account, an authenticated
    Named Pipe on Windows and Unix socket elsewhere, and filesystem ACLs on the vault and key.
 2. **Linux and macOS isolation backends.** The `IsolationBackend` protocol in
-   `src/secret_runtime/session/isolation/base.py` is the extension point; the Windows AppContainer
+   `src/interpose/session/isolation/base.py` is the extension point; the Windows AppContainer
    backend is the reference implementation. Linux wants namespaces plus nftables egress rules;
    macOS wants sandbox profiles and a Network Extension.
 3. **Egress enforcement.** Policy is meaningless while the agent can open its own socket. This is
    the other half of item 1.
-4. **External secret stores.** `SecretStore` in `src/secret_runtime/secrets/base.py` is a small
+4. **External secret stores.** `SecretStore` in `src/interpose/secrets/base.py` is a small
    protocol. Vault, Azure Key Vault, AWS Secrets Manager, GCP Secret Manager, Keychain, and Secret
    Service all fit behind it.
 5. **SDK compatibility.** Clients that validate token format locally reject `secret://...` before a
@@ -86,7 +86,7 @@ A pull request doing any of these will be declined regardless of its quality:
 - resolving a secret before its policy is evaluated;
 - allowing a session profile to grant a policy;
 - accepting HTTPS `CONNECT` by tunneling it — see [SECURITY.md](SECURITY.md) for why;
-- passing `SECRET_RUNTIME_MASTER_KEY` or `SECRET_RUNTIME_HOME` to a managed child;
+- passing `INTERPOSE_MASTER_KEY` or `INTERPOSE_HOME` to a managed child;
 - widening the default environment allowlist without a stated reason per variable.
 
 If you have a design that achieves one of these goals while preserving the guarantee, open an issue.

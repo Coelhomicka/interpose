@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from secret_runtime.secrets.encrypted_local import EncryptedLocalSecretStore
+from interpose.secrets.encrypted_local import EncryptedLocalSecretStore
 
 
 def test_storage_does_not_persist_plaintext(runtime_config):

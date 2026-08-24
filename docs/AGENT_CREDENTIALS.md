@@ -15,7 +15,7 @@ When asked to configure a credential:
 3. Never ask for the plaintext value when a reference is available.
 4. Never replace a reference with `****`, a fake token, or a hardcoded value.
 5. Never implement code that resolves a reference.
-6. Never inspect the Secret Runtime database, master key, process memory, or administrative API.
+6. Never inspect the Interpose database, master key, process memory, or administrative API.
 7. Use the variable normally. The trusted data plane mediates supported operations.
 8. When a broker base URL is provided, configure the application's normal base URL variable to use it. Do not reconstruct individual requests.
 9. Never replace `/proxy/{allowed-host}` with another destination to bypass policy.

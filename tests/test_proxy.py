@@ -4,8 +4,8 @@ import httpx
 import pytest
 from fastapi.testclient import TestClient
 
-from secret_runtime.core.policies import PolicyDocument
-from secret_runtime.proxy.http_proxy import create_proxy_app, parse_local_transport_target, parse_proxy_target
+from interpose.core.policies import PolicyDocument
+from interpose.proxy.http_proxy import create_proxy_app, parse_local_transport_target, parse_proxy_target
 
 
 def test_local_transport_defaults_external_destination_to_https():
@@ -103,7 +103,7 @@ schemes:
                 request=httpx.Request(method, url),
             )
 
-    monkeypatch.setattr("secret_runtime.proxy.http_proxy.httpx.AsyncClient", FakeAsyncClient)
+    monkeypatch.setattr("interpose.proxy.http_proxy.httpx.AsyncClient", FakeAsyncClient)
     client = TestClient(create_proxy_app(runtime_container))
 
     response = client.post(

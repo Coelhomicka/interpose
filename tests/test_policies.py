@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import pytest
 
-from secret_runtime.core.policies import PolicyDocument, PolicyEngine, PolicyError, SQLitePolicyRepository
-from secret_runtime.core.references import SecretReference
-from secret_runtime.models import DestinationContext
+from interpose.core.policies import PolicyDocument, PolicyEngine, PolicyError, SQLitePolicyRepository
+from interpose.core.references import SecretReference
+from interpose.models import DestinationContext
 
 
 def test_policy_allows_expected_host(runtime_config):
@@ -21,7 +21,7 @@ allow:
     )
     engine = PolicyEngine(repo)
     decision = engine.evaluate(
-        secret_reference=__import__("secret_runtime").SecretReference.parse("secret://github/prod"),
+        secret_reference=__import__("interpose").SecretReference.parse("secret://github/prod"),
         destination=DestinationContext(host="api.github.com", method="GET"),
     )
     assert decision.allowed is True
@@ -44,7 +44,7 @@ deny:
     )
     engine = PolicyEngine(repo)
     decision = engine.evaluate(
-        secret_reference=__import__("secret_runtime").SecretReference.parse("secret://github/prod"),
+        secret_reference=__import__("interpose").SecretReference.parse("secret://github/prod"),
         destination=DestinationContext(host="attacker.com", method="POST"),
     )
     assert decision.allowed is False

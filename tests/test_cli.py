@@ -5,7 +5,7 @@ from types import SimpleNamespace
 
 from typer.testing import CliRunner
 
-from secret_runtime.cli.main import app, secure_exec_app
+from interpose.cli.main import app, interpose_exec_app
 
 runner = CliRunner()
 
@@ -29,14 +29,14 @@ def test_secret_add_reports_invalid_reference_without_traceback(runtime_config):
     assert "Traceback" not in result.output
 
 
-def test_secure_exec_accepts_command_and_arguments(runtime_config):
+def test_interpose_exec_accepts_command_and_arguments(runtime_config):
     result = runner.invoke(
-        secure_exec_app,
-        [sys.executable, "-c", "print('secure-exec-ok')"],
+        interpose_exec_app,
+        [sys.executable, "-c", "print('interpose-exec-ok')"],
     )
 
     assert result.exit_code == 0, result.output
-    assert result.output == "secure-exec-ok\n"
+    assert result.output == "interpose-exec-ok\n"
 
 
 def test_run_command_forwards_arbitrary_agent_arguments(runtime_config, tmp_path, monkeypatch):
@@ -51,7 +51,7 @@ def test_run_command_forwards_arbitrary_agent_arguments(runtime_config, tmp_path
             return 0
 
     monkeypatch.setattr(
-        "secret_runtime.cli.main._container",
+        "interpose.cli.main._container",
         lambda: SimpleNamespace(session_launcher=FakeLauncher()),
     )
 

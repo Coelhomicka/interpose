@@ -19,13 +19,13 @@ from ..session.isolation.factory import create_isolation_backend
 from ..session.launcher import SessionLaunchError
 from ..session.profile import SessionProfile, SessionProfileError
 
-app = typer.Typer(add_completion=False, help="Administrative CLI for Secret Runtime")
+app = typer.Typer(add_completion=False, help="Administrative CLI for Interpose")
 secret_app = typer.Typer(add_completion=False, help="Secret management commands")
 profile_app = typer.Typer(add_completion=False, help="Session profile commands")
 env_app = typer.Typer(add_completion=False, help="Reference-only .env commands")
 policy_app = typer.Typer(add_completion=False, help="Policy administration commands")
 isolation_app = typer.Typer(add_completion=False, help="Process and network isolation commands")
-secure_exec_app = typer.Typer(
+interpose_exec_app = typer.Typer(
     add_completion=False,
     context_settings={"allow_extra_args": True, "ignore_unknown_options": True},
     help="Trusted executor for untrusted commands",
@@ -244,8 +244,8 @@ def run_proxy(host: str = "127.0.0.1", port: int = 9876) -> None:
     uvicorn.run(create_proxy_app(), host=host, port=port, log_level="info")
 
 
-@secure_exec_app.command()
-def secure_exec(
+@interpose_exec_app.command()
+def interpose_exec(
     ctx: typer.Context,
     agent: str = typer.Option("unknown", help="Agent identity"),
     destination: str | None = typer.Option(None, help="Explicit destination host"),

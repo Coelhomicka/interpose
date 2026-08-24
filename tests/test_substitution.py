@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from secret_runtime.core.substitution import SecretSubstitutionEngine
-from secret_runtime.secrets.encrypted_local import EncryptedLocalSecretStore
+from interpose.core.substitution import SecretSubstitutionEngine
+from interpose.secrets.encrypted_local import EncryptedLocalSecretStore
 
 
 def test_substitution_engine_resolves_placeholder(runtime_config):

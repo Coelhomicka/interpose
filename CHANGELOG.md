@@ -34,6 +34,10 @@ Entries that change a security guarantee are marked **[security]**.
 
 ### Changed
 
+- **Renamed the project from Secret Runtime to Interpose**, before any release. The package is now
+  `interpose`, the CLI is `interpose`, `secure-exec` became `interpose-exec`, environment variables
+  use the `INTERPOSE_` prefix, and the runtime home moved to `~/.interpose`. The `secret://` URI
+  scheme is unchanged — it describes the reference, not the product.
 - Strict warning filters (`-W error`) in the pytest configuration, so resource and deprecation
   warnings fail the build instead of accumulating silently.
 
@@ -53,10 +57,10 @@ Initial implementation.
 - Metadata-only SQLite audit log with resolved URLs redacted before persistence.
 - Reference-only session profiles, `.env` reference validation, and an environment allowlist that
   strips inherited credentials from managed children.
-- Agent-agnostic `secretruntime run` launcher for Codex, Claude Code, Cursor, and Gemini CLI.
+- Agent-agnostic `interpose run` launcher for Codex, Claude Code, Cursor, and Gemini CLI.
 - Windows AppContainer isolation backend with loopback firewall rules scoped to the container SID.
 - Administrative FastAPI application with no endpoint that returns a secret value.
-- `secure-exec` limited compatibility mode for tools the broker cannot mediate.
+- `interpose-exec` limited compatibility mode for tools the broker cannot mediate.
 
-[Unreleased]: https://github.com/MickaelCoelho/secret-runtime/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/MickaelCoelho/secret-runtime/releases/tag/v0.1.0
+[Unreleased]: https://github.com/MickaelCoelho/interpose/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/MickaelCoelho/interpose/releases/tag/v0.1.0

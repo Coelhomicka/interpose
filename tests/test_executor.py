@@ -2,11 +2,11 @@ from __future__ import annotations
 
 import subprocess
 
-from secret_runtime.core.audit import AuditLogger
-from secret_runtime.core.policies import PolicyDocument, PolicyEngine, SQLitePolicyRepository
-from secret_runtime.core.redaction import SecretRedactionEngine
-from secret_runtime.executor.trusted_executor import TrustedExecutor
-from secret_runtime.secrets.encrypted_local import EncryptedLocalSecretStore
+from interpose.core.audit import AuditLogger
+from interpose.core.policies import PolicyDocument, PolicyEngine, SQLitePolicyRepository
+from interpose.core.redaction import SecretRedactionEngine
+from interpose.executor.trusted_executor import TrustedExecutor
+from interpose.secrets.encrypted_local import EncryptedLocalSecretStore
 
 
 def test_executor_resolves_and_redacts(runtime_config, monkeypatch):

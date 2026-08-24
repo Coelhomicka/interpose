@@ -11,7 +11,7 @@
 - metadata-only SQLite audit
 - reference-only session profiles
 - `.env` reference validation
-- agent-agnostic `secretruntime run`
+- agent-agnostic `interpose run`
 - environment allowlist and inherited-credential removal
 - HTTP forward/reverse broker
 - explicit `/proxy/{host}` local transport with external HTTPS origination
@@ -20,7 +20,7 @@
 - URL-encoded query and form substitution
 - JSON, header, and body substitution
 - explicit rejection of unsupported HTTPS `CONNECT`
-- limited `secure-exec` compatibility mode
+- limited `interpose-exec` compatibility mode
 
 ## V2: Enforced isolation
 

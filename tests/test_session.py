@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import subprocess
 
-from secret_runtime.session.launcher import SessionLauncher, build_session_environment
-from secret_runtime.session.profile import SessionProfile
+from interpose.session.launcher import SessionLauncher, build_session_environment
+from interpose.session.profile import SessionProfile
 
 
 def test_profile_normalizes_reference_bindings():
@@ -39,8 +39,8 @@ runtime:
         source={
             "PATH": "safe-path",
             "REAL_API_TOKEN": "plaintext-token",
-            "SECRET_RUNTIME_MASTER_KEY": "master-key",
-            "SECRET_RUNTIME_HOME": "vault-path",
+            "INTERPOSE_MASTER_KEY": "master-key",
+            "INTERPOSE_HOME": "vault-path",
         },
     )
 
@@ -50,8 +50,8 @@ runtime:
     assert environment["HTTP_PROXY"] == "http://127.0.0.1:9876"
     assert environment["NO_PROXY"] == ""
     assert "REAL_API_TOKEN" not in environment
-    assert "SECRET_RUNTIME_MASTER_KEY" not in environment
-    assert "SECRET_RUNTIME_HOME" not in environment
+    assert "INTERPOSE_MASTER_KEY" not in environment
+    assert "INTERPOSE_HOME" not in environment
 
 
 def test_launcher_never_resolves_binding(runtime_container, monkeypatch):

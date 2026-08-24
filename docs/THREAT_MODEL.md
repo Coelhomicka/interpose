@@ -4,7 +4,7 @@
 
 Agents, IDEs, generated code, project files, and child processes are untrusted. The Secret Store, policy engine, broker, redaction engine, and audit writer form the trusted zone.
 
-The preferred model is reference-only execution: untrusted processes receive `secret://` values and a trusted protocol broker performs the operation that requires plaintext. `secure-exec` is a limited compatibility mode because its subprocess receives resolved arguments.
+The preferred model is reference-only execution: untrusted processes receive `secret://` values and a trusted protocol broker performs the operation that requires plaintext. `interpose-exec` is a limited compatibility mode because its subprocess receives resolved arguments.
 
 ## Threats
 
@@ -14,10 +14,10 @@ The preferred model is reference-only execution: untrusted processes receive `se
 | Malicious generated code | Partially Protected | The launcher supplies references only. Same-user filesystem and network isolation are not enforced yet. |
 | Secret exfiltration through an allowed HTTP target | Partially Protected | Host and method policies are checked before resolution. Fine-grained path/body policy is future work. |
 | Inherited environment credentials | Protected in managed sessions | The launcher builds the child environment from an allowlist and injects only declared references. |
-| Environment inspection | Protected in managed sessions | Inspection reveals references. Processes launched outside `secretruntime run` are out of scope. |
+| Environment inspection | Protected in managed sessions | Inspection reveals references. Processes launched outside `interpose run` are out of scope. |
 | Filesystem inspection | Not Protected Yet | A same-user process may read the local database and master-key file. Run the daemon under a separate OS identity in production. |
 | Runtime administrative API access | Not Protected Yet | The local API has no authentication. It must remain on loopback and outside the agent session. |
-| `/proc` or process inspection | Partially Protected | Reference-only sessions contain no secret arguments. `secure-exec` may expose resolved arguments. |
+| `/proc` or process inspection | Partially Protected | Reference-only sessions contain no secret arguments. `interpose-exec` may expose resolved arguments. |
 | Process memory inspection | Not Protected Yet | Same-user isolation between the broker and agent is not enforced. |
 | Direct network exfiltration | Not Protected Yet | The explicit local transport does not prevent an agent from opening direct sockets. OS egress enforcement remains mandatory. |
 | HTTP broker exfiltration | Partially Protected | Destination, method, and scheme policies are enforced before resolution. DNS rebinding and path-level controls remain. |
@@ -38,7 +38,7 @@ The current implementation guarantees that:
 1. no public API or CLI operation returns a stored secret value;
 2. broker policies are evaluated before secret resolution;
 3. managed child environments contain declared references rather than resolved values;
-4. the launcher does not pass `SECRET_RUNTIME_MASTER_KEY` or `SECRET_RUNTIME_HOME` to children;
+4. the launcher does not pass `INTERPOSE_MASTER_KEY` or `INTERPOSE_HOME` to children;
 5. local secret storage uses authenticated encryption;
 6. audit records do not intentionally persist plaintext secrets;
 7. HTTP `CONNECT` is rejected instead of creating a false transparent-HTTPS guarantee.
@@ -52,5 +52,5 @@ The current implementation does not guarantee protection against:
 2. direct network access that bypasses the local transport;
 3. memory scraping of the trusted broker;
 4. covert channels, DNS, QUIC, or unmanaged transports;
-5. secrets delivered through the limited `secure-exec` compatibility mode;
+5. secrets delivered through the limited `interpose-exec` compatibility mode;
 6. SDKs that require plaintext locally to validate, derive, encrypt, or sign.

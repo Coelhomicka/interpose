@@ -1,6 +1,6 @@
 # Architecture
 
-This document describes how Secret Runtime is put together and, more importantly, *where the trust
+This document describes how Interpose is put together and, more importantly, *where the trust
 boundary sits*. Contributions that move that boundary need an issue first — see
 [CONTRIBUTING.md](../CONTRIBUTING.md).
 
@@ -10,7 +10,7 @@ Conventional secret managers answer the question "what is the value of this cred
 question is unanswerable safely when the caller is an AI agent, because the answer immediately
 becomes part of a filesystem, a process environment, a log, and a context window.
 
-Secret Runtime never answers it. It answers a different question: *"perform this operation, which
+Interpose never answers it. It answers a different question: *"perform this operation, which
 happens to require a credential."* The untrusted side holds a reference; the trusted side holds the
 value and performs the operation.
 
@@ -49,7 +49,7 @@ code may be malicious, and project files may have been written by either.
 The launcher (`session/launcher.py`) is the gate between the two. It builds the child environment
 from an allowlist rather than inheriting the parent's, so credentials already present in the
 operator's shell do not cross into the agent session, and it never passes
-`SECRET_RUNTIME_MASTER_KEY` or `SECRET_RUNTIME_HOME` to the child.
+`INTERPOSE_MASTER_KEY` or `INTERPOSE_HOME` to the child.
 
 > **Current limitation.** The broker runs as the same OS user as the agent. A malicious same-user
 > process can read the vault file and master key directly instead of going through the broker at
@@ -69,12 +69,12 @@ operator's shell do not cross into the agent session, and it never passes
 | `secrets/base.py` | The `SecretStore` protocol; the seam for external stores |
 | `secrets/encrypted_local.py` | AES-GCM vault with per-record nonces and value fingerprints |
 | `proxy/http_proxy.py` | The broker: target parsing, policy check, resolution, upstream request, redaction |
-| `executor/trusted_executor.py` | `secure-exec` compatibility mode — substitutes into subprocess arguments |
+| `executor/trusted_executor.py` | `interpose-exec` compatibility mode — substitutes into subprocess arguments |
 | `session/profile.py` | Session profile parsing and validation; enforces that profiles cannot grant policy |
 | `session/launcher.py` | Environment allowlist construction and child process launch |
 | `session/isolation/` | OS-level isolation backends behind the `IsolationBackend` protocol |
 | `api/app.py` | Administrative FastAPI app; no endpoint returns a value |
-| `cli/main.py` | The `secretruntime` and `secure-exec` entry points |
+| `cli/main.py` | The `interpose` and `interpose-exec` entry points |
 | `container.py` | Composition root — wires every component from `RuntimeConfig` |
 
 `create_container()` is the single place where dependencies are assembled. Tests build their own
@@ -116,7 +116,7 @@ Shorthand like `APIChave/teste` normalizes to `secret://apichave/teste`.
 plaintext. The fingerprint supports equality checks and audit correlation without retaining the
 value.
 
-**Master key.** Read from `SECRET_RUNTIME_MASTER_KEY` when set, otherwise from `master.key` in the
+**Master key.** Read from `INTERPOSE_MASTER_KEY` when set, otherwise from `master.key` in the
 runtime home, generated with `os.urandom(32)` on first use. Either source is passed through SHA-256
 to produce the 32-byte key. The file currently relies on OS user permissions — the same-user
 limitation above applies directly here.

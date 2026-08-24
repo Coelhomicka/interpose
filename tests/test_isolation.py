@@ -5,9 +5,9 @@ import re
 
 import pytest
 
-from secret_runtime.session.isolation.base import IsolationError, NoIsolationBackend
-from secret_runtime.session.isolation.factory import create_isolation_backend
-from secret_runtime.session.profile import SessionProfile, SessionProfileError
+from interpose.session.isolation.base import IsolationError, NoIsolationBackend
+from interpose.session.isolation.factory import create_isolation_backend
+from interpose.session.profile import SessionProfile, SessionProfileError
 
 
 def test_profile_requires_loopback_broker_for_windows_isolation():
@@ -50,7 +50,7 @@ def test_no_isolation_backend_is_explicit(tmp_path):
 
 @pytest.mark.skipif(os.name != "nt", reason="Windows AppContainer backend")
 def test_windows_firewall_rules_block_loopback_except_broker_port(tmp_path, monkeypatch):
-    from secret_runtime.session.isolation.windows_appcontainer import WindowsAppContainerBackend
+    from interpose.session.isolation.windows_appcontainer import WindowsAppContainerBackend
 
     profile = SessionProfile.from_yaml(
         """
@@ -73,7 +73,7 @@ runtime:
         captured["operation"] = operation
 
     monkeypatch.setattr(
-        "secret_runtime.session.isolation.windows_appcontainer._run_powershell",
+        "interpose.session.isolation.windows_appcontainer._run_powershell",
         capture_script,
     )
 
@@ -90,7 +90,7 @@ runtime:
 
 @pytest.mark.skipif(os.name != "nt", reason="Windows AppContainer backend")
 def test_windows_isolation_refuses_runtime_storage_acl(tmp_path):
-    from secret_runtime.session.isolation.windows_appcontainer import WindowsAppContainerBackend
+    from interpose.session.isolation.windows_appcontainer import WindowsAppContainerBackend
 
     runtime_home = tmp_path / "runtime"
     runtime_home.mkdir()
@@ -109,5 +109,5 @@ runtime:
         runtime_home=runtime_home,
     )
 
-    with pytest.raises(IsolationError, match="refusing to expose Secret Runtime storage"):
+    with pytest.raises(IsolationError, match="refusing to expose Interpose storage"):
         backend._validated_path(runtime_home)

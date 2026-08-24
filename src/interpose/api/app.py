@@ -38,7 +38,7 @@ def _policy_response(record) -> PolicyMetadataResponse:
 
 def create_app(container: RuntimeContainer | None = None) -> FastAPI:
     runtime = container or create_container()
-    app = FastAPI(title="Secret Runtime Admin API", version="0.1.0")
+    app = FastAPI(title="Interpose Admin API", version="0.1.0")
 
     def get_runtime() -> RuntimeContainer:
         return runtime

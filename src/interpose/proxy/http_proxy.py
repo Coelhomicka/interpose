@@ -28,7 +28,7 @@ _HOP_BY_HOP_HEADERS = {
     "upgrade",
     "host",
     "content-length",
-    "x-secret-runtime-scheme",
+    "x-interpose-scheme",
 }
 
 
@@ -136,7 +136,7 @@ def parse_local_transport_target(path: str, query: str) -> ProxyTarget | None:
 
 def create_proxy_app(container: RuntimeContainer | None = None) -> FastAPI:
     runtime = container or create_container()
-    app = FastAPI(title="Secret Runtime Proxy", version="0.1.0")
+    app = FastAPI(title="Interpose Proxy", version="0.1.0")
 
     @app.api_route(
         "/{path:path}",
@@ -169,7 +169,7 @@ def create_proxy_app(container: RuntimeContainer | None = None) -> FastAPI:
                     raw_target=raw_target,
                     host_header=request.headers.get("host"),
                     fallback_scheme=request.headers.get(
-                        "x-secret-runtime-scheme",
+                        "x-interpose-scheme",
                         str(request.scope.get("scheme", "http")),
                     ),
                     fallback_path=path,

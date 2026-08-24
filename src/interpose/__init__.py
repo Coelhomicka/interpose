@@ -1,4 +1,4 @@
-"""Secret Runtime package."""
+"""Interpose package."""
 
 from .api.app import create_app
 from .config import RuntimeConfig, load_runtime_config

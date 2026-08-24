@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-from secret_runtime.session.dotenv import DotenvValidationError, validate_dotenv
-from secret_runtime.session.profile import SessionProfile
+from interpose.session.dotenv import DotenvValidationError, validate_dotenv
+from interpose.session.profile import SessionProfile
 
 
 def test_dotenv_accepts_expected_secret_references(tmp_path):

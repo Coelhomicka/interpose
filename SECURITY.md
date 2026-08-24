@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-Secret Runtime is alpha software. Only the latest commit on `main` receives security fixes.
+Interpose is alpha software. Only the latest commit on `main` receives security fixes.
 
 | Version | Supported |
 | --- | --- |
@@ -14,8 +14,8 @@ Secret Runtime is alpha software. Only the latest commit on `main` receives secu
 **Do not open a public issue for a vulnerability.**
 
 Report privately through
-[GitHub Security Advisories](https://github.com/MickaelCoelho/secret-runtime/security/advisories/new),
-or by email to **mcmickael9@gmail.com** with `[secret-runtime security]` in the subject.
+[GitHub Security Advisories](https://github.com/MickaelCoelho/interpose/security/advisories/new),
+or by email to **mcmickael9@gmail.com** with `[interpose security]` in the subject.
 
 Please include:
 
@@ -54,8 +54,8 @@ threat, what is protected and what is not. A report describing a limitation alre
 - Resolution ordering: any path where a secret is decrypted before its policy is evaluated.
 - Redaction bypass: a resolved value surviving in a response body, header, or error trace in a form
   the redaction engine should have caught.
-- Environment leakage: a managed child receiving a plaintext value, `SECRET_RUNTIME_MASTER_KEY`, or
-  `SECRET_RUNTIME_HOME`.
+- Environment leakage: a managed child receiving a plaintext value, `INTERPOSE_MASTER_KEY`, or
+  `INTERPOSE_HOME`.
 - Weaknesses in the AES-GCM vault: nonce reuse, key derivation flaws, unauthenticated data paths.
 - Path or authority parsing flaws in the local transport that redirect a request to an
   unauthorized host.
@@ -71,7 +71,7 @@ These are documented non-guarantees, not vulnerabilities:
   control is required and not yet implemented.
 - The **unauthenticated administrative API** when it is exposed beyond loopback. It is documented as
   loopback-only.
-- **`secure-exec`** delivering plaintext to its subprocess. That is its documented behavior and the
+- **`interpose-exec`** delivering plaintext to its subprocess. That is its documented behavior and the
   reason it is labeled a limited compatibility mode.
 - HTTPS `CONNECT` not being intercepted. It is rejected with `501` by design.
 - DNS, QUIC, covert channels, and other transports outside the broker.
@@ -81,14 +81,14 @@ report it — the boundary being wrong is itself worth knowing.
 
 ## Operational guidance
 
-Secret Runtime's guarantees hold only under the deployment it assumes:
+Interpose's guarantees hold only under the deployment it assumes:
 
 1. Run the broker and the administrative CLI in a **trusted terminal**, not inside the agent session.
-2. Keep `SECRET_RUNTIME_HOME` outside any directory the agent can read or write.
+2. Keep `INTERPOSE_HOME` outside any directory the agent can read or write.
 3. Keep the administrative API bound to loopback.
 4. Add policies from operator-controlled files only. A profile inside the agent's workspace must
    never be a source of authorization.
-5. Treat `secure-exec` as a stopgap for tools the broker cannot mediate — never for agent-generated
+5. Treat `interpose-exec` as a stopgap for tools the broker cannot mediate — never for agent-generated
    executables.
 6. Scope policies narrowly. `allow.hosts` accepts glob patterns; `*` defeats the purpose of the
    policy engine.

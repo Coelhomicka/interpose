@@ -14,7 +14,7 @@ def _normalize_key_material(raw: bytes) -> bytes:
 def _decode_key(value: str) -> bytes:
     candidate = value.strip()
     if not candidate:
-        raise ValueError("SECRET_RUNTIME_MASTER_KEY cannot be empty")
+        raise ValueError("INTERPOSE_MASTER_KEY cannot be empty")
     if all(ch in "0123456789abcdefABCDEF" for ch in candidate) and len(candidate) % 2 == 0:
         return bytes.fromhex(candidate)
     padded = candidate + "=" * (-len(candidate) % 4)
@@ -33,7 +33,7 @@ class RuntimePaths:
 
     @classmethod
     def from_env(cls) -> RuntimePaths:
-        home = Path(os.getenv("SECRET_RUNTIME_HOME", str(Path.home() / ".secret-runtime"))).expanduser()
+        home = Path(os.getenv("INTERPOSE_HOME", str(Path.home() / ".interpose"))).expanduser()
         return cls(
             home=home,
             database=home / "runtime.db",
@@ -51,7 +51,7 @@ class RuntimeConfig:
     @classmethod
     def from_env(cls) -> RuntimeConfig:
         paths = RuntimePaths.from_env()
-        agent_name = os.getenv("SECRET_RUNTIME_AGENT", "unknown").strip() or "unknown"
+        agent_name = os.getenv("INTERPOSE_AGENT", "unknown").strip() or "unknown"
         master_key = load_master_key(paths.master_key_file)
         return cls(paths=paths, master_key=master_key, agent_name=agent_name)
 
@@ -61,7 +61,7 @@ def load_runtime_config() -> RuntimeConfig:
 
 
 def load_master_key(master_key_file: Path) -> bytes:
-    env_value = os.getenv("SECRET_RUNTIME_MASTER_KEY")
+    env_value = os.getenv("INTERPOSE_MASTER_KEY")
     if env_value:
         return _normalize_key_material(_decode_key(env_value))
 
