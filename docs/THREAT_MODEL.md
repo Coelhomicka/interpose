@@ -25,6 +25,7 @@ The preferred model is reference-only execution: untrusted processes receive `se
 | HTTP redirects | Protected | Automatic upstream redirects are disabled. |
 | URL-encoded references | Protected for query/form HTTP | The broker decodes references, evaluates policy, resolves, and safely re-encodes values. |
 | Logs and audit | Protected for known resolved values | Resolved values and resolved URLs are redacted; audit records contain references and metadata only. |
+| Audit attribution | Not Protected Yet | The broker has no client authentication on loopback, so it cannot verify which process sent a request. Records are reliable about what happened, not about who did it. |
 | Tracebacks | Partially Protected | Broker errors are redacted. Untrusted application tracebacks contain references only in managed sessions. |
 | Response reflection | Partially Protected | Known resolved values are redacted in headers and bodies. Encoded or transformed reflections may evade exact redaction. |
 | DNS exfiltration | Not Protected Yet | DNS is not controlled at the OS layer. |

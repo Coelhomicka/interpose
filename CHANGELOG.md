@@ -20,6 +20,18 @@ Entries that change a security guarantee are marked **[security]**.
 - `ruff` lint configuration and `pytest-cov`, wired into the `dev` extra.
 - Issue and pull request templates, and Dependabot for Actions and pip.
 
+### Documentation
+
+- Corrected the quickstart, which showed `--agent` as if it were required. It is optional, defaults
+  to `unknown`, and is an audit label — no policy is keyed to it and no behavior depends on it.
+- Documented that broker-side audit attribution is **self-reported and currently non-functional**:
+  the label reaches the child's environment but not the broker, which has no client authentication
+  on loopback and cannot verify which process sent a request. Added as a row in the threat model.
+- Added "What Interpose can and cannot wrap", covering the two real compatibility conditions —
+  inheriting the launcher's environment, and supporting a configurable base URL — including the
+  trap where `code .` signals an already-running editor instance and silently leaves the session
+  unprotected.
+
 ### Fixed
 
 - **[security]** SQLite connections in the secret vault, policy repository, and audit log were never

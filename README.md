@@ -114,20 +114,57 @@ interpose proxy --host 127.0.0.1 --port 9876
 **5. Run the agent** with a sanitized environment:
 
 ```bash
-interpose run --profile session.yaml --agent claude-code -- claude
+interpose run --profile session.yaml -- claude
 ```
 
 The child process receives `OPENAI_API_KEY=secret://openai/prod`. Credentials inherited from your
 own shell are stripped — the environment is rebuilt from an allowlist — and the launcher never
 passes `INTERPOSE_MASTER_KEY` or `INTERPOSE_HOME` to the child.
 
-The launcher is agent-agnostic:
+The launcher does not care what it is starting — it passes the command through unchanged:
 
 ```bash
-interpose run --profile session.yaml --agent codex      -- codex
-interpose run --profile session.yaml --agent cursor     -- cursor
-interpose run --profile session.yaml --agent gemini-cli -- gemini
+interpose run --profile session.yaml -- codex
+interpose run --profile session.yaml -- cursor
+interpose run --profile session.yaml -- gemini
+interpose run --profile session.yaml -- python my_script.py
 ```
+
+There is an optional `--agent NAME` flag. It is a label for audit records and nothing else: no
+policy is keyed to it, and no behavior changes with it. See
+[audit attribution](#audit-attribution-is-self-reported) before relying on it.
+
+## What Interpose can and cannot wrap
+
+Which tool you run matters, but not because Interpose knows their names. A tool works with the
+broker when it meets two conditions:
+
+**1. It inherits the environment Interpose builds.** The launcher governs the process it starts and
+that process's children. Anything already running is untouched.
+
+This is why CLI agents fit naturally and IDE extensions usually do not. An extension runs inside the
+editor's process, so the editor itself has to be launched through Interpose:
+
+```bash
+interpose run --profile session.yaml -- code .
+```
+
+> **Watch out:** if a window of the editor is already open, `code .` typically just signals the
+> running instance and exits. The new window is served by the old process, with the old
+> environment — so nothing is protected, and nothing warns you. Close every window first, or use a
+> separate profile directory for the managed session.
+
+**2. It lets you point the credential at a different base URL.** The broker only sees requests
+addressed to it. A tool that reads `OPENAI_BASE_URL`, `ANTHROPIC_BASE_URL`, or an equivalent
+setting can be redirected. A tool that stores its key in the editor's own secret storage and calls
+the vendor endpoint directly cannot — there is nowhere to put a reference and nothing to redirect.
+
+If a tool has a custom-endpoint setting in its UI, point that setting at the broker and put the
+`secret://` reference in its key field. That works even when the tool is not launched by Interpose,
+as long as the broker is running.
+
+Verify a session with `interpose env validate` and by watching the audit log: if requests are not
+appearing there, the tool is reaching the network on its own.
 
 ## Verifying without resolving
 
@@ -188,7 +225,21 @@ Guaranteed today:
 - **denial of direct network egress** — nothing stops an agent from opening its own socket and
   bypassing the broker. OS-level egress control is mandatory for a real threat model;
 - protection against process-memory, DNS, or covert-channel attacks;
-- compatibility with SDKs that validate token *format* locally before any request is made.
+- compatibility with SDKs that validate token *format* locally before any request is made;
+- attribution of a broker request to a specific agent — see below.
+
+### Audit attribution is self-reported
+
+The broker accepts requests on loopback with no client authentication, so it cannot verify *which*
+process sent one. The `--agent` label you pass to `interpose run` reaches the child's environment
+but not the broker, which means broker-side audit records currently carry the broker's own agent
+name — in practice `unknown` — regardless of what you passed.
+
+Audit records are reliable about *what happened*: the reference used, the destination, the policy
+decision, and the upstream status. They are not reliable about *who did it* when more than one
+managed session shares a broker. Verified per-agent attribution needs the authenticated daemon on
+the [roadmap](docs/ROADMAP.md); anything achievable before that is self-reported by an untrusted
+process and therefore forgeable.
 
 [`docs/THREAT_MODEL.md`](docs/THREAT_MODEL.md) has the full per-threat breakdown. It is written to
 be honest about what does not work, not to market what does.

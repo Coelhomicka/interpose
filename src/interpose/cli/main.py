@@ -215,7 +215,10 @@ def isolation_doctor(
 def run_session(
     ctx: typer.Context,
     profile: Path = typer.Option(..., exists=True, dir_okay=False, readable=True),
-    agent: str = typer.Option("unknown", help="Agent or IDE identity"),
+    agent: str = typer.Option(
+        "unknown",
+        help="Audit label only; no policy or behavior depends on it. Not propagated to the broker.",
+    ),
     session: str | None = typer.Option(None, help="Optional session identifier"),
     cwd: Path | None = typer.Option(None, exists=True, file_okay=False),
 ) -> None:
@@ -247,7 +250,10 @@ def run_proxy(host: str = "127.0.0.1", port: int = 9876) -> None:
 @interpose_exec_app.command()
 def interpose_exec(
     ctx: typer.Context,
-    agent: str = typer.Option("unknown", help="Agent identity"),
+    agent: str = typer.Option(
+        "unknown",
+        help="Audit label only; no policy or behavior depends on it.",
+    ),
     destination: str | None = typer.Option(None, help="Explicit destination host"),
     method: str | None = typer.Option(None, help="Explicit method"),
     session: str = typer.Option("local", help="Session identifier"),
