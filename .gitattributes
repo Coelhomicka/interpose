@@ -1,0 +1,19 @@
+# Normalize line endings: the repository stores LF, checkouts use platform native
+* text=auto eol=lf
+
+# Windows-only scripts must keep CRLF to run correctly
+*.ps1  text eol=crlf
+*.bat  text eol=crlf
+*.cmd  text eol=crlf
+
+# Binary
+*.png  binary
+*.jpg  binary
+*.gif  binary
+*.ico  binary
+*.db   binary
+*.key  binary
+
+# Keep generated/vendored files out of language statistics and diffs
+LICENSE          linguist-vendored
+CODE_OF_CONDUCT.md linguist-vendored

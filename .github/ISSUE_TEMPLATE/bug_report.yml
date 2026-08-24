@@ -1,0 +1,78 @@
+name: Bug report
+description: Something behaves differently than documented
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Do not report a security vulnerability here.** Follow
+        [SECURITY.md](https://github.com/MickaelCoelho/secret-runtime/blob/main/SECURITY.md) instead.
+
+        **Never paste a real credential.** Use a throwaway value in every snippet below.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What did you observe, and what did you expect instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. secretruntime secret add example/test
+        2. secretruntime policy add ...
+        3. secretruntime run --profile ... -- ...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      options:
+        - Broker / proxy
+        - Policy engine
+        - Secret store / vault
+        - Session launcher / profiles
+        - Isolation backend
+        - CLI
+        - Administrative API
+        - secure-exec
+        - Documentation
+        - Not sure
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      placeholder: "0.1.0, or a commit hash"
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: OS and Python version
+      placeholder: "Windows 11, Python 3.12.4"
+    validations:
+      required: true
+
+  - type: textarea
+    id: config
+    attributes:
+      label: Policy and profile
+      description: The relevant YAML, with hostnames redacted if needed. Never include secret values.
+      render: yaml
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Output or traceback
+      description: Check it for credentials before pasting.
+      render: shell

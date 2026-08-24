@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+MANIFEST
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Testing and coverage
+.pytest_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.tox/
+.nox/
+
+# Type checkers and linters
+.mypy_cache/
+.ruff_cache/
+.pytype/
+
+# Leftovers from manually-run isolation tests (elevated shell, restrictive ACLs)
+pytest-temp-*/
+
+# Secret Runtime state must never be committed
+.secret-runtime/
+*.key
+secrets.db
+audit.db
+policies.db
+
+# Local session material: profiles may name real hosts, .env may hold real values
+session.yaml
+session.local.yaml
+.env
+.env.local
+!examples/.env.reference
+
+# Editors and OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini

@@ -1,0 +1,14 @@
+version: 1
+
+environment:
+  SECRET_API_KEY: secret://secretapi/teste
+
+public_environment:
+  API_BASE: http://127.0.0.1:9876/proxy/localhost:8001
+
+runtime:
+  isolation:
+    mode: windows-appcontainer
+    broker_url: http://127.0.0.1:9876
+    read_only_paths: []
+    read_write_paths: []

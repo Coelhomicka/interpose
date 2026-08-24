@@ -1,0 +1,67 @@
+name: Feature request
+description: Propose a capability, backend, or integration
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Check [docs/ROADMAP.md](https://github.com/MickaelCoelho/secret-runtime/blob/main/docs/ROADMAP.md)
+        first — the item may already be planned, in which case comment there instead.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve
+      description: Describe the situation you are stuck in, not the solution you have in mind.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed approach
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - New secret store backend
+        - New isolation backend (Linux / macOS)
+        - Egress enforcement
+        - New protocol broker (database, SSH, signing, mTLS)
+        - Policy expressiveness
+        - Agent integration
+        - Developer experience / CLI
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: trust-boundary
+    attributes:
+      label: Does this change the trust boundary?
+      description: >-
+        Resolution ordering, what a child process receives, what an endpoint returns, or how policy
+        is sourced. See docs/ARCHITECTURE.md if you are unsure.
+      options:
+        - "No"
+        - "Yes"
+        - "Not sure"
+    validations:
+      required: true
+
+  - type: textarea
+    id: security
+    attributes:
+      label: Security implications
+      description: >-
+        If this touches the trusted zone, what guarantee could it weaken, and how does the proposal
+        preserve it?
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered

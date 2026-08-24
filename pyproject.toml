@@ -1,0 +1,127 @@
+[build-system]
+# setuptools>=77 is required for the PEP 639 license expression and license-files fields
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "secret-runtime"
+version = "0.1.0"
+description = "Credential virtualization runtime for untrusted AI agents and generated applications"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+authors = [{ name = "Mickael Coelho", email = "mcmickael9@gmail.com" }]
+keywords = [
+  "secrets",
+  "credentials",
+  "ai-agents",
+  "agent-security",
+  "prompt-injection",
+  "policy",
+  "broker",
+  "audit",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "Intended Audience :: System Administrators",
+  "Operating System :: Microsoft :: Windows",
+  "Operating System :: POSIX :: Linux",
+  "Operating System :: MacOS",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Security",
+  "Topic :: Software Development :: Libraries :: Application Frameworks",
+  "Topic :: System :: Systems Administration :: Authentication/Directory",
+  "Typing :: Typed",
+]
+dependencies = [
+  "fastapi>=0.115",
+  "uvicorn[standard]>=0.30",
+  "pydantic>=2.7",
+  "typer>=0.12",
+  "cryptography>=43",
+  "httpx>=0.27",
+  "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+  "pytest-cov>=5.0",
+  "ruff>=0.6",
+]
+
+[project.urls]
+Homepage = "https://github.com/MickaelCoelho/secret-runtime"
+Repository = "https://github.com/MickaelCoelho/secret-runtime"
+Issues = "https://github.com/MickaelCoelho/secret-runtime/issues"
+Changelog = "https://github.com/MickaelCoelho/secret-runtime/blob/main/CHANGELOG.md"
+"Threat Model" = "https://github.com/MickaelCoelho/secret-runtime/blob/main/docs/THREAT_MODEL.md"
+
+[project.scripts]
+secretruntime = "secret_runtime.cli.main:app"
+secure-exec = "secret_runtime.cli.main:secure_exec_app"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "--strict-markers --strict-config"
+filterwarnings = [
+  "error",
+  # starlette's TestClient still imports httpx; not actionable from here
+  "ignore::starlette.exceptions.StarletteDeprecationWarning",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["secret_runtime"]
+
+[tool.coverage.report]
+show_missing = true
+exclude_lines = [
+  "pragma: no cover",
+  "if TYPE_CHECKING:",
+  "raise NotImplementedError",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+  "E",    # pycodestyle errors
+  "F",    # pyflakes
+  "I",    # import sorting
+  "UP",   # pyupgrade
+  "B",    # bugbear
+  "S",    # flake8-bandit
+  "C4",   # comprehensions
+  "SIM",  # simplify
+  "RUF",  # ruff-specific
+]
+ignore = [
+  "S101",  # assert is fine in tests
+  "S603",  # subprocess call: the launcher's whole job is running a child process
+  "S607",  # partial executable paths are resolved through PATH deliberately
+  "S105",  # "secret"/"token" in an identifier is the domain here, not a leaked value
+  "B008",  # typer.Option/Argument in defaults is the framework's documented idiom
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Windows API bindings mirror the SDK's naming and cannot be renamed
+"src/secret_runtime/session/isolation/windows_native.py" = ["N801", "N815"]
+"tests/**" = ["S106", "S108"]
+# The example app is a deliberate stand-in for untrusted generated code
+"examples/**" = ["S310"]

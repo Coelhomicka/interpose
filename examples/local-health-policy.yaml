@@ -1,0 +1,8 @@
+secret: secretapi/teste
+
+allow:
+  hosts:
+    - localhost:8001
+
+methods:
+  - GET
