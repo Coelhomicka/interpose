@@ -56,11 +56,11 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/MickaelCoelho/interpose"
-Repository = "https://github.com/MickaelCoelho/interpose"
-Issues = "https://github.com/MickaelCoelho/interpose/issues"
-Changelog = "https://github.com/MickaelCoelho/interpose/blob/main/CHANGELOG.md"
-"Threat Model" = "https://github.com/MickaelCoelho/interpose/blob/main/docs/THREAT_MODEL.md"
+Homepage = "https://github.com/Coelhomicka/interpose"
+Repository = "https://github.com/Coelhomicka/interpose"
+Issues = "https://github.com/Coelhomicka/interpose/issues"
+Changelog = "https://github.com/Coelhomicka/interpose/blob/main/CHANGELOG.md"
+"Threat Model" = "https://github.com/Coelhomicka/interpose/blob/main/docs/THREAT_MODEL.md"
 
 [project.scripts]
 interpose = "interpose.cli.main:app"

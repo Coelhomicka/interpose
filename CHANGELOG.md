@@ -62,5 +62,5 @@ Initial implementation.
 - Administrative FastAPI application with no endpoint that returns a secret value.
 - `interpose-exec` limited compatibility mode for tools the broker cannot mediate.
 
-[Unreleased]: https://github.com/MickaelCoelho/interpose/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/MickaelCoelho/interpose/releases/tag/v0.1.0
+[Unreleased]: https://github.com/Coelhomicka/interpose/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/Coelhomicka/interpose/releases/tag/v0.1.0

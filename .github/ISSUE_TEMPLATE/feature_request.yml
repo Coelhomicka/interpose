@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Check [docs/ROADMAP.md](https://github.com/MickaelCoelho/interpose/blob/main/docs/ROADMAP.md)
+        Check [docs/ROADMAP.md](https://github.com/Coelhomicka/interpose/blob/main/docs/ROADMAP.md)
         first — the item may already be planned, in which case comment there instead.
 
   - type: textarea
